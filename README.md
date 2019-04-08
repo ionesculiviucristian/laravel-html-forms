@@ -20,7 +20,7 @@ composer require ionesculiviucristian/laravel-html-forms
 ## Usage
 
 ``` php
-$button = new \ionesculiviucristian\LaravelHtmlForm\Button;
+$button = new \ionesculiviucristian\LaravelHtmlForms\Button;
 
 $button
     ->title('my title')
