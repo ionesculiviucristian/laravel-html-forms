@@ -19,7 +19,7 @@ use InvalidArgumentException;
  * @method Element title(string|bool $value)
  * @method Element style(string|bool $value)
  *
- * @method data(array $values): Element
+ * @method Element data(array $values)
  */
 abstract class Element
 {
@@ -34,6 +34,16 @@ abstract class Element
     protected $closeTag = true;
 
     /**
+     * @var string
+     */
+    protected $content;
+
+    /**
+     * @var array
+     */
+    protected $customAttributes = [];
+
+    /**
      * @var array
      */
     protected $attributes = [
@@ -46,28 +56,7 @@ abstract class Element
     /**
      * @var array
      */
-    protected $customAttributes = [];
-
-    /**
-     * @var array
-     */
     protected $dataAttributes = [];
-
-    /**
-     * @var string
-     */
-    protected $content;
-
-    /**
-     * @param string $content
-     * @return Element
-     */
-    public function content(string $content): Element
-    {
-        $this->content = $content;
-
-        return $this;
-    }
 
     /**
      * @param string $tag
@@ -92,12 +81,12 @@ abstract class Element
     }
 
     /**
-     * @param array $attributes
+     * @param string $content
      * @return Element
      */
-    public function setAttributes(array $attributes): Element
+    public function content(string $content): Element
     {
-        $this->attributes = $attributes;
+        $this->content = $content;
 
         return $this;
     }
@@ -117,6 +106,17 @@ abstract class Element
      * @param array $attributes
      * @return Element
      */
+    public function setAttributes(array $attributes): Element
+    {
+        $this->attributes = $attributes;
+
+        return $this;
+    }
+
+    /**
+     * @param array $attributes
+     * @return Element
+     */
     public function setDataAttributes(array $attributes): Element
     {
         $this->dataAttributes = $attributes;
@@ -125,11 +125,19 @@ abstract class Element
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getAttributes(): array
+    public function getTag(): string
     {
-        return $this->attributes;
+        return $this->tag;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent(): string
+    {
+        return $this->content;
     }
 
     /**
@@ -143,25 +151,17 @@ abstract class Element
     /**
      * @return array
      */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @return array
+     */
     public function getDataAttributes(): array
     {
         return $this->dataAttributes;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContent(): string
-    {
-        return $this->content;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTag(): string
-    {
-        return $this->tag;
     }
 
     /**
@@ -186,6 +186,15 @@ abstract class Element
      * @param string $key
      * @return bool
      */
+    protected function hasCustomAttribute(string $key): bool
+    {
+        return array_key_exists($key, $this->customAttributes);
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
     protected function hasAttribute(string $key): bool
     {
         return array_key_exists($key, $this->attributes);
@@ -201,12 +210,11 @@ abstract class Element
     }
 
     /**
-     * @param string $key
-     * @return bool
+     * @return string
      */
-    protected function hasCustomAttribute(string $key): bool
+    protected function getCustomAttributesString(): string
     {
-        return array_key_exists($key, $this->customAttributes);
+        return $this->buildAttributesString($this->customAttributes);
     }
 
     /**
@@ -215,14 +223,6 @@ abstract class Element
     protected function getAttributesString(): string
     {
         return $this->buildAttributesString($this->attributes);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getCustomAttributesString(): string
-    {
-        return $this->buildAttributesString($this->customAttributes);
     }
 
     /**
@@ -349,13 +349,9 @@ abstract class Element
     {
         if ($this->hasAttribute($key)) {
             return $this->attributes[$key];
-        }
-
-        if ($this->hasCustomAttribute($key)) {
+        } elseif ($this->hasCustomAttribute($key)) {
             return $this->customAttributes[$key];
-        }
-
-        if ($this->isDataAttribute($key)) {
+        } elseif ($this->isDataAttribute($key)) {
             return $this->dataAttributes[$this->getInternalDataAttributeKey($key)];
         }
 
