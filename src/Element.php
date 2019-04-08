@@ -214,17 +214,7 @@ abstract class Element
      */
     protected function getAttributesString(): string
     {
-        $string = [];
-
-        $attributes = array_filter($this->attributes, static function ($attribute) {
-            return (bool) $attribute;
-        });
-
-        foreach ($attributes as $key => $value) {
-            $string[] = "{$key}=\"{$value}\"";
-        }
-
-        return count($string) ? ' '.implode(' ', $string) : '';
+        return $this->buildAttributesString($this->attributes);
     }
 
     /**
@@ -232,17 +222,7 @@ abstract class Element
      */
     protected function getCustomAttributesString(): string
     {
-        $string = [];
-
-        $attributes = array_filter($this->customAttributes, static function ($attribute) {
-            return (bool) $attribute;
-        });
-
-        foreach ($attributes as $key => $value) {
-            $string[] = "{$key}=\"{$value}\"";
-        }
-
-        return count($string) ? ' '.implode(' ', $string) : '';
+        return $this->buildAttributesString($this->customAttributes);
     }
 
     /**
@@ -250,14 +230,26 @@ abstract class Element
      */
     protected function getDataAttributesString(): string
     {
+        return $this->buildAttributesString($this->dataAttributes, 'data');
+    }
+
+    /**
+     * @param array $attributes
+     * @param string|null $prefix
+     * @return string
+     */
+    protected function buildAttributesString(array $attributes, $prefix = null): string
+    {
         $string = [];
 
-        $attributes = array_filter($this->dataAttributes, static function ($attribute) {
+        $validAttributes = array_filter($attributes, function ($attribute) {
             return (bool) $attribute;
         });
 
-        foreach ($attributes as $key => $value) {
-            $string[] = "data-{$key}=\"{$value}\"";
+        $prefix = $prefix ? "{$prefix}-" : '';
+
+        foreach ($validAttributes as $key => $value) {
+            $string[] = "{$prefix}{$key}=\"{$value}\"";
         }
 
         return count($string) ? ' '.implode(' ', $string) : '';
@@ -381,15 +373,11 @@ abstract class Element
             $this->attributes[$name] = $arguments[0] ?? false;
 
             return $this;
-        }
-
-        if ($this->hasCustomAttribute($name)) {
+        } elseif ($this->hasCustomAttribute($name)) {
             $this->customAttributes[$name] = $arguments[0] ?? false;
 
             return $this;
-        }
-
-        if ($this->isDataAttribute($name)) {
+        } elseif ($this->isDataAttribute($name)) {
             $data = is_array($arguments[0]) ? $arguments[0] : [$arguments[0]];
 
             foreach ($data as $key => $value) {
