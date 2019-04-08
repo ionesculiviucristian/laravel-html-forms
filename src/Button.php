@@ -1,6 +1,6 @@
 <?php
 
-namespace ionesculiviucristian\LaravelHtmlForm;
+namespace ionesculiviucristian\LaravelHtmlForms;
 
 /**
  * @property string|bool $type

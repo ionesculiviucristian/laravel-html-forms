@@ -6,7 +6,7 @@ use BadMethodCallException;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Orchestra\Testbench\TestCase;
-use ionesculiviucristian\LaravelHtmlForm\Element;
+use ionesculiviucristian\LaravelHtmlForms\Element;
 
 class ElementTest extends TestCase
 {

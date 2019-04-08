@@ -3,7 +3,7 @@
 namespace ionesculiviucristian\LaravelHtmlForms\Tests;
 
 use Orchestra\Testbench\TestCase;
-use ionesculiviucristian\LaravelHtmlForm\Button;
+use ionesculiviucristian\LaravelHtmlForms\Button;
 
 class ButtonTest extends TestCase
 {

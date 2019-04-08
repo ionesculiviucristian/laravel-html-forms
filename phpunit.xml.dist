@@ -10,7 +10,7 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="Laravel HTML Form Suite">
+        <testsuite name="Laravel HTML Forms Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
