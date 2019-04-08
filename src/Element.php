@@ -315,13 +315,9 @@ abstract class Element
     {
         if ($this->hasAttribute($key)) {
             return true;
-        }
-
-        if ($this->hasCustomAttribute($key)) {
+        } else if ($this->hasCustomAttribute($key)) {
             return true;
-        }
-
-        if ($this->isDataAttribute($key)) {
+        } else if ($this->isDataAttribute($key)) {
             return $this->hasDataAttribute($key);
         }
 
@@ -331,34 +327,30 @@ abstract class Element
     /**
      * @param mixed $key
      * @param mixed $value
-     * @return Element
+     * @return void
      * @throws Exception
      */
-    public function __set(string $key, $value)
+    public function __set(string $key, $value): void
     {
         if ($this->hasAttribute($key)) {
             $this->attributes[$key] = $value;
 
-            return $this;
-        }
-
-        if ($this->hasCustomAttribute($key)) {
+            return;
+        } else if ($this->hasCustomAttribute($key)) {
             $this->customAttributes[$key] = $value;
 
-            return $this;
-        }
-
-        if ($this->isDataAttribute($key)) {
+            return;
+        } else if ($this->isDataAttribute($key)) {
             $this->dataAttributes[$this->getInternalDataAttributeKey($key)] = $value;
 
-            return $this;
+            return;
         }
 
         throw new InvalidArgumentException("Undefined property {$key}.");
     }
 
     /**
-     * @param mixed $key
+     * @param string $key
      * @return mixed
      */
     public function __get(string $key)
@@ -383,7 +375,7 @@ abstract class Element
      * @param array $arguments
      * @return Element
      */
-    public function __call(string $name, array $arguments)
+    public function __call(string $name, array $arguments): Element
     {
         if ($this->hasAttribute($name)) {
             $this->attributes[$name] = $arguments[0] ?? false;
@@ -417,7 +409,7 @@ abstract class Element
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         try {
             if (! $this->tag) {
