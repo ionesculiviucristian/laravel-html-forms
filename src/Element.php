@@ -315,9 +315,9 @@ abstract class Element
     {
         if ($this->hasAttribute($key)) {
             return true;
-        } else if ($this->hasCustomAttribute($key)) {
+        } elseif ($this->hasCustomAttribute($key)) {
             return true;
-        } else if ($this->isDataAttribute($key)) {
+        } elseif ($this->isDataAttribute($key)) {
             return $this->hasDataAttribute($key);
         }
 
@@ -336,11 +336,11 @@ abstract class Element
             $this->attributes[$key] = $value;
 
             return;
-        } else if ($this->hasCustomAttribute($key)) {
+        } elseif ($this->hasCustomAttribute($key)) {
             $this->customAttributes[$key] = $value;
 
             return;
-        } else if ($this->isDataAttribute($key)) {
+        } elseif ($this->isDataAttribute($key)) {
             $this->dataAttributes[$this->getInternalDataAttributeKey($key)] = $value;
 
             return;
