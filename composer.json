@@ -1,0 +1,44 @@
+{
+    "name": "ionesculiviucristian/laravel-html-forms",
+    "description": "Laravel package for quickly creating HTML elements, the programmatic way.",
+    "keywords": [
+        "laravel",
+        "html",
+        "forms"
+    ],
+    "homepage": "https://github.com/ionesculiviucristian/laravel-html-forms",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ionescu Liviu Cristian",
+            "email": "ionescu.liviucristian@yahoo.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "illuminate/support" : "^5.5"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^3.5",
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ionesculiviucristian\\LaravelHtmlForm\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ionesculiviucristian\\LaravelHtmlForm\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
