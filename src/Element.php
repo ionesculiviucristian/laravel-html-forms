@@ -181,7 +181,7 @@ abstract class Element
     {
         return Str::startsWith($key, 'data');
     }
-    
+
     /**
      * @param string $key
      * @return bool
@@ -216,7 +216,7 @@ abstract class Element
     {
         $string = [];
 
-        $attributes = array_filter($this->attributes, static function($attribute) {
+        $attributes = array_filter($this->attributes, static function ($attribute) {
             return (bool) $attribute;
         });
 
@@ -234,7 +234,7 @@ abstract class Element
     {
         $string = [];
 
-        $attributes = array_filter($this->customAttributes, static function($attribute) {
+        $attributes = array_filter($this->customAttributes, static function ($attribute) {
             return (bool) $attribute;
         });
 
@@ -252,7 +252,7 @@ abstract class Element
     {
         $string = [];
 
-        $attributes = array_filter($this->dataAttributes, static function($attribute) {
+        $attributes = array_filter($this->dataAttributes, static function ($attribute) {
             return (bool) $attribute;
         });
 

@@ -10,11 +10,11 @@ use ionesculiviucristian\LaravelHtmlForm\Element;
 
 class ElementTest extends TestCase
 {
-
     /** @test */
     public function it_sets_the_custom_attributes_correctly(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
 
         // Method assignment
         $element->setCustomAttributes([
@@ -46,7 +46,8 @@ class ElementTest extends TestCase
     /** @test */
     public function it_sets_the_attributes_correctly(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
 
         // Method assignment
         $element->setAttributes([
@@ -78,7 +79,8 @@ class ElementTest extends TestCase
     /** @test */
     public function it_sets_the_data_attributes_correctly(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
 
         // Method assignment
         $element->setDataAttributes([
@@ -108,7 +110,8 @@ class ElementTest extends TestCase
     /** @test */
     public function it_sets_the_properties_correctly(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
 
         $element->setTag('test')->content('content test');
 
@@ -120,7 +123,8 @@ class ElementTest extends TestCase
     /** @test */
     public function it_can_check_for_attributes_existence_correctly(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
 
         $element->setAttributes([
             'attribute1' => 'attribute1-value',
@@ -162,7 +166,8 @@ class ElementTest extends TestCase
     /** @test */
     public function it_throws_an_exception_when_setting_undefined_attributes(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
 
         $this->expectException(InvalidArgumentException::class);
 
@@ -172,7 +177,8 @@ class ElementTest extends TestCase
     /** @test */
     public function it_throws_an_exception_when_getting_undefined_attributes(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
 
         $this->expectException(InvalidArgumentException::class);
 
@@ -182,7 +188,8 @@ class ElementTest extends TestCase
     /** @test */
     public function it_throws_an_exception_when_calling_undefined_methods(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
 
         $this->expectException(BadMethodCallException::class);
 
@@ -192,13 +199,15 @@ class ElementTest extends TestCase
     /** @test */
     public function it_throws_an_exception_when_setting_non_scalar_values_on_data_attributes(): void
     {
-        $element1 = new class extends Element {};
+        $element1 = new class extends Element {
+        };
 
         $element1->data(['key1' => 'value1']);
 
         $this->addToAssertionCount(1);
 
-        $element2 = new class extends Element {};
+        $element2 = new class extends Element {
+        };
 
         $this->expectException(InvalidArgumentException::class);
 
@@ -208,7 +217,8 @@ class ElementTest extends TestCase
     /** @test */
     public function it_returns_an_empty_string_when_an_exception_is_raised_while_rendering_the_element(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
 
         $this->assertEquals('', (string) $element);
     }
@@ -216,7 +226,8 @@ class ElementTest extends TestCase
     /** @test */
     public function it_renders_the_tag_correctly(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
 
         $element->setTag('test');
 
@@ -228,7 +239,8 @@ class ElementTest extends TestCase
     /** @test */
     public function it_renders_the_closed_tag_correctly(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
 
         $element->setTag('test');
 
@@ -238,7 +250,8 @@ class ElementTest extends TestCase
     /** @test */
     public function it_renders_the_custom_attributes_correctly(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
 
         $element->setTag('test');
 
@@ -258,7 +271,8 @@ class ElementTest extends TestCase
     /** @test */
     public function it_renders_the_attributes_correctly(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
 
         $element->setTag('test');
 
@@ -276,7 +290,8 @@ class ElementTest extends TestCase
     /** @test */
     public function it_renders_the_data_attributes_correctly(): void
     {
-        $element = new class extends Element {};
+        $element = new class extends Element {
+        };
         $element->setTag('test');
 
         $this->assertEquals(
