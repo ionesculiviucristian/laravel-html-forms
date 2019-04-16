@@ -5,11 +5,11 @@ namespace ionesculiviucristian\LaravelHtmlForms\Tests;
 use BadMethodCallException;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use ionesculiviucristian\LaravelHtmlForms\Traits\HasCheckedAttribute;
-use ionesculiviucristian\LaravelHtmlForms\Traits\HasMultipleAttribute;
-use ionesculiviucristian\LaravelHtmlForms\Traits\InteractsWithForms;
 use Orchestra\Testbench\TestCase;
 use ionesculiviucristian\LaravelHtmlForms\Element;
+use ionesculiviucristian\LaravelHtmlForms\Traits\InteractsWithForms;
+use ionesculiviucristian\LaravelHtmlForms\Traits\HasCheckedAttribute;
+use ionesculiviucristian\LaravelHtmlForms\Traits\HasMultipleAttribute;
 
 class ElementTest extends TestCase
 {
@@ -193,7 +193,7 @@ class ElementTest extends TestCase
     {
         $element = new class extends Element {
             protected $dataAttributes = [
-                'key1' => false
+                'key1' => false,
             ];
         };
 
@@ -207,7 +207,7 @@ class ElementTest extends TestCase
     {
         $element = new class extends Element {
             protected $dataAttributes = [
-                'key1' => false
+                'key1' => false,
             ];
         };
 
