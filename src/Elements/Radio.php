@@ -3,8 +3,8 @@
 namespace ionesculiviucristian\LaravelHtmlForms\Elements;
 
 use ionesculiviucristian\LaravelHtmlForms\Element;
-use ionesculiviucristian\LaravelHtmlForms\Traits\IsClosedInputTag;
 use ionesculiviucristian\LaravelHtmlForms\Traits\HasTypeAttribute;
+use ionesculiviucristian\LaravelHtmlForms\Traits\IsClosedInputTag;
 use ionesculiviucristian\LaravelHtmlForms\Traits\InteractsWithForms;
 use ionesculiviucristian\LaravelHtmlForms\Traits\HasCheckedAttribute;
 
