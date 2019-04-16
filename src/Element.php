@@ -351,6 +351,19 @@ abstract class Element
     }
 
     /**
+     * @param array $data
+     * @return Element
+     */
+    public function data(array $data)
+    {
+        foreach ($data as $key => $value) {
+            $this->dataAttributes[$key] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
      * @param string $key
      * @return bool
      */

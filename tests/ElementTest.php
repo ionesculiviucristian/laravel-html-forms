@@ -75,6 +75,23 @@ class ElementTest extends TestCase
     }
 
     /** @test */
+    public function it_sets_the_data_attributes_through_method_correctly(): void
+    {
+        $element = new class extends Element {
+        };
+
+        $data = ['key1' => 'test1', 'key2' => 'test2'];
+
+        $element->data($data);
+
+        foreach ($data as $key => $value) {
+            $dataAttribute = 'data'.ucfirst($key);
+
+            $this->assertEquals($value, $element->{$dataAttribute});
+        }
+    }
+
+    /** @test */
     public function it_sets_the_properties_correctly(): void
     {
         $element = new class extends Element {

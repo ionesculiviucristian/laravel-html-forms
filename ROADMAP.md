@@ -3,7 +3,7 @@
 ### 1.1.x
 - [x] add jsClass()
 - [ ] mergeable attributes (like classes)
-- [ ] data() function for autocomplete purposes
+- [x] data() function for autocomplete purposes
 - [x] add get/put/delete methods to forms
 - [x] add CSRF token
 - [ ] add Laravel service provider
@@ -16,3 +16,6 @@
 
 ### 1.3.x 
 - [ ] new elements based on popular JS libraries
+
+### 1.4.x
+- [ ] add documentation
