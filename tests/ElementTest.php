@@ -35,6 +35,17 @@ class ElementTest extends TestCase
     }
 
     /** @test */
+    public function it_sets_the_js_class_correctly()
+    {
+        $element = new class extends Element {
+        };
+
+        $element->jsClass('test');
+
+        $this->assertEquals('js-test', $element->class);
+    }
+
+    /** @test */
     public function it_sets_the_data_attributes_correctly(): void
     {
         $element = new class extends Element {

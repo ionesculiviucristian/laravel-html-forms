@@ -191,6 +191,24 @@ abstract class Element
     }
 
     /**
+     * @param string $key
+     * @return string
+     */
+    protected function getTransformAttributeMethod(string $key): string
+    {
+        return 'transform'.Str::ucfirst($key).'Attribute';
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    protected function hasTransformAttributeMethod(string $key): bool
+    {
+        return method_exists($this, $this->getTransformAttributeMethod($key));
+    }
+
+    /**
      * @return string
      */
     protected function getAttributesString(): string
@@ -201,7 +219,11 @@ abstract class Element
 
         foreach ($properties as $name => $value) {
             if (Str::startsWith($name, 'attribute')) {
-                $attributes[$this->convertPropertyNameToAttributeName($name)] = $value;
+                $attribute = $this->convertPropertyNameToAttributeName($name);
+
+                $attributes[$attribute] =
+                    $this->hasTransformAttributeMethod($attribute) ?
+                        $this->{$this->getTransformAttributeMethod($attribute)}($value) : $value;
             }
         }
 
@@ -257,7 +279,7 @@ abstract class Element
      */
     protected function getTagPattern(): string
     {
-        return '<%s%s%s>';
+        return '<%s%s%s>%s';
     }
 
     /**
@@ -269,6 +291,7 @@ abstract class Element
             $this->tag,
             $this->getAttributesString(),
             $this->getDataAttributesString(),
+            $this->getTransformedContent(),
         ];
     }
 
@@ -314,6 +337,17 @@ abstract class Element
     public function close()
     {
         return $this->closeTag ? "</{$this->tag}>" : '';
+    }
+
+    /**
+     * @param string|bool $class
+     * @return Element
+     */
+    public function jsClass($class): Element
+    {
+        $this->attributeClass = $class === false ? false : "js-{$class}";
+
+        return $this;
     }
 
     /**

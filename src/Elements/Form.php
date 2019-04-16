@@ -28,6 +28,11 @@ class Form extends Element
     protected $closeTag = false;
 
     /**
+     * @var bool
+     */
+    protected $csrf = false;
+
+    /**
      * @var string|bool
      */
     protected $attributeAction = false;
@@ -41,6 +46,150 @@ class Form extends Element
      * @var string|bool
      */
     protected $attributeEnctype = false;
+
+    /**
+     * @param bool $csrf
+     * @return Form
+     */
+    public function csrf(bool $csrf): Form
+    {
+        $this->csrf = $csrf;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCsrf(): bool
+    {
+        return $this->csrf;
+    }
+
+    /**
+     * @param string|bool $action
+     * @param bool $csrf
+     * @return Form
+     */
+    public function get($action = false, $csrf = true): Form
+    {
+        $this->attributeMethod = 'get';
+
+        $this->attributeAction = $action;
+
+        $this->csrf = $csrf;
+
+        if ($csrf) {
+            $this->content = '<input type="hidden" name="_token" value="'.csrf_token().'">';
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string|bool $action
+     * @param bool $csrf
+     * @return Form
+     */
+    public function post($action = false, $csrf = true): Form
+    {
+        $this->attributeMethod = 'post';
+
+        $this->attributeAction = $action;
+
+        $this->csrf = $csrf;
+
+        if ($csrf) {
+            $this->content = '<input type="hidden" name="_token" value="'.csrf_token().'">';
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string|bool $action
+     * @param bool $csrf
+     * @return Form
+     */
+    public function put($action = false, $csrf = true): Form
+    {
+        $this->attributeMethod = 'post';
+
+        $this->attributeAction = $action;
+
+        $this->csrf = $csrf;
+
+        $this->content = '<input type="hidden" name="_method" value="put">';
+
+        if ($csrf) {
+            $this->content .= '<input type="hidden" name="_token" value="'.csrf_token().'">';
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string|bool $action
+     * @param bool $csrf
+     * @return Form
+     */
+    public function delete($action = false, $csrf = true): Form
+    {
+        $this->attributeMethod = 'post';
+
+        $this->attributeAction = $action;
+
+        $this->content = '<input type="hidden" name="_method" value="delete">';
+
+        if ($csrf) {
+            $this->content .= '<input type="hidden" name="_token" value="'.csrf_token().'">';
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string|bool
+     */
+    protected function getTransformedContent()
+    {
+        // This should happen when using get/post/put/delete methods or when set manually
+        if ($this->content) {
+            return $this->content;
+        }
+
+        $content = '';
+
+        switch ($this->attributeMethod) {
+            case 'put':
+                $content .= '<input type="hidden" name="_method" value="put">';
+
+                break;
+            case 'delete':
+                $content .= '<input type="hidden" name="_method" value="delete">';
+
+                break;
+        }
+
+        if ($this->csrf) {
+            $content .= '<input type="hidden" name="_token" value="'.csrf_token().'">';
+        }
+
+        return $content;
+    }
+
+    /**
+     * @param string $method
+     * @return string
+     */
+    protected function transformMethodAttribute(string $method): string
+    {
+        if (in_array($method, ['put', 'delete'])) {
+            return 'post';
+        }
+
+        return $method;
+    }
 
     /**
      * @param mixed $value
@@ -67,7 +216,7 @@ class Form extends Element
             return;
         }
 
-        if (! in_array(Str::lower($value), ['get', 'post'])) {
+        if (! in_array(Str::lower($value), ['get', 'post', 'put', 'delete'])) {
             throw new InvalidArgumentException("{$value} is not a valid type attribute.");
         }
     }
