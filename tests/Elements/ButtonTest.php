@@ -1,6 +1,6 @@
 <?php
 
-namespace ionesculiviucristian\LaravelHtmlForms\Tests;
+namespace ionesculiviucristian\LaravelHtmlForms\Tests\Elements;
 
 use InvalidArgumentException;
 use Orchestra\Testbench\TestCase;

@@ -1,6 +1,6 @@
 <?php
 
-namespace ionesculiviucristian\LaravelHtmlForms\Tests;
+namespace ionesculiviucristian\LaravelHtmlForms\Tests\Elements;
 
 use Orchestra\Testbench\TestCase;
 use ionesculiviucristian\LaravelHtmlForms\Elements\File;

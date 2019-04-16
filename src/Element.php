@@ -430,12 +430,7 @@ abstract class Element
     public function __call(string $name, array $arguments): Element
     {
         if ($this->hasAttribute($name)) {
-            // Perform attribute validation, if needed
-            if ($this->hasAttributeValidationMethod($name)) {
-                $this->{$this->getAttributeValidationMethod($name)}($arguments[0] ?? false);
-            }
-
-            $this->{$this->getInternalAttributeKey($name)} = $arguments[0] ?? false;
+            $this->{$name} = $arguments[0] ?? false;
 
             return $this;
         // Because data attributes are set on the fly we don't have to check for their existence
@@ -444,9 +439,7 @@ abstract class Element
                 return $this;
             }
 
-            $this->validateDataAttributeValue($arguments[0]);
-
-            $this->dataAttributes[$this->getInternalDataAttributeKey($name)] = $arguments[0];
+            $this->{$name} = $arguments[0];
 
             return $this;
         }
