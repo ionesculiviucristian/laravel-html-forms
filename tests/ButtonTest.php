@@ -2,36 +2,50 @@
 
 namespace ionesculiviucristian\LaravelHtmlForms\Tests;
 
+use InvalidArgumentException;
 use Orchestra\Testbench\TestCase;
-use ionesculiviucristian\LaravelHtmlForms\Button;
+use ionesculiviucristian\LaravelHtmlForms\Elements\Button;
 
 class ButtonTest extends TestCase
 {
     /** @test */
     public function it_renders_the_button_correctly(): void
     {
-        $button = new Button;
+        $button = new class extends Button {
+        };
 
-        // Custom attributes
-        $button
-            ->type('submit')
-            ->value('my-value');
+        $button->type('submit');
 
-        // Attributes
-        $button
-            ->title('my title')
-            ->id('my-id')
-            ->class('my-class')
-            ->style('width:100px;height:50px')
-            ->content('my content');
+        $this->assertEquals('<input type="submit">', (string) $button);
+    }
 
-        // Data attributes
-        $button
-            ->data([
-                'test1' => 'test1-value',
-                'test2' => 'test2-value',
-            ]);
+    /** @test */
+    public function it_throws_an_exception_when_setting_an_incorrect_type_attribute_value_through_setter()
+    {
+        $button = new class extends Button {
+        };
 
-        $this->assertEquals('<button type="submit" value="my-value" title="my title" id="my-id" class="my-class" style="width:100px;height:50px" data-test1="test1-value" data-test2="test2-value">my content</button>', (string) $button);
+        $button->type = false;
+
+        $this->addToAssertionCount(1);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $button->type = 'test';
+    }
+
+    /** @test */
+    public function it_throws_an_exception_when_setting_an_incorrect_type_attribute_value_through_call()
+    {
+        $button = new class extends Button {
+        };
+
+        $button->type(false);
+
+        $this->addToAssertionCount(1);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $button->type('test');
     }
 }

@@ -18,8 +18,6 @@ use InvalidArgumentException;
  * @method Element class(string|bool $value)
  * @method Element title(string|bool $value)
  * @method Element style(string|bool $value)
- *
- * @method Element data(array $values)
  */
 abstract class Element
 {
@@ -34,24 +32,29 @@ abstract class Element
     protected $closeTag = true;
 
     /**
-     * @var string
+     * @return string|bool
      */
     protected $content;
 
     /**
-     * @var array
+     * @var string
      */
-    protected $customAttributes = [];
+    protected $attributeTitle = false;
 
     /**
-     * @var array
+     * @var string
      */
-    protected $attributes = [
-        'title' => false,
-        'id'    => false,
-        'class' => false,
-        'style' => false,
-    ];
+    protected $attributeId = false;
+
+    /**
+     * @var string
+     */
+    protected $attributeClass = false;
+
+    /**
+     * @var string
+     */
+    protected $attributeStyle = false;
 
     /**
      * @var array
@@ -70,6 +73,14 @@ abstract class Element
     }
 
     /**
+     * @return string
+     */
+    public function getTag(): string
+    {
+        return $this->tag;
+    }
+
+    /**
      * @param bool $closeTag
      * @return Element
      */
@@ -81,55 +92,22 @@ abstract class Element
     }
 
     /**
+     * @return bool
+     */
+    public function getCloseTag(): bool
+    {
+        return $this->closeTag;
+    }
+
+    /**
      * @param string $content
      * @return Element
      */
-    public function content(string $content): Element
+    public function setContent(string $content): Element
     {
         $this->content = $content;
 
         return $this;
-    }
-
-    /**
-     * @param array $attributes
-     * @return Element
-     */
-    public function setCustomAttributes(array $attributes): Element
-    {
-        $this->customAttributes = $attributes;
-
-        return $this;
-    }
-
-    /**
-     * @param array $attributes
-     * @return Element
-     */
-    public function setAttributes(array $attributes): Element
-    {
-        $this->attributes = $attributes;
-
-        return $this;
-    }
-
-    /**
-     * @param array $attributes
-     * @return Element
-     */
-    public function setDataAttributes(array $attributes): Element
-    {
-        $this->dataAttributes = $attributes;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTag(): string
-    {
-        return $this->tag;
     }
 
     /**
@@ -141,27 +119,21 @@ abstract class Element
     }
 
     /**
-     * @return array
+     * @param string $key
+     * @return string
      */
-    public function getCustomAttributes(): array
+    protected function getInternalAttributeKey(string $key): string
     {
-        return $this->customAttributes;
+        return 'attribute'.Str::ucfirst($key);
     }
 
     /**
-     * @return array
+     * @param string $key
+     * @return bool
      */
-    public function getAttributes(): array
+    protected function hasAttribute(string $key): bool
     {
-        return $this->attributes;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDataAttributes(): array
-    {
-        return $this->dataAttributes;
+        return property_exists($this, $this->getInternalAttributeKey($key));
     }
 
     /**
@@ -177,44 +149,45 @@ abstract class Element
      * @param string $key
      * @return bool
      */
-    protected function isDataAttribute(string $key): bool
-    {
-        return Str::startsWith($key, 'data');
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    protected function hasCustomAttribute(string $key): bool
-    {
-        return array_key_exists($key, $this->customAttributes);
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    protected function hasAttribute(string $key): bool
-    {
-        return array_key_exists($key, $this->attributes);
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
     protected function hasDataAttribute(string $key): bool
     {
         return array_key_exists($this->getInternalDataAttributeKey($key), $this->dataAttributes);
     }
 
     /**
+     * @param string $key
+     * @return bool
+     */
+    protected function isDataAttribute(string $key): bool
+    {
+        return Str::startsWith($key, 'data');
+    }
+
+    /**
+     * @param string $property
      * @return string
      */
-    protected function getCustomAttributesString(): string
+    protected function convertPropertyNameToAttributeName(string $property): string
     {
-        return $this->buildAttributesString($this->customAttributes);
+        return Str::slug(Str::substr($property, 9), '-');
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    protected function getAttributeValidationMethod(string $key): string
+    {
+        return 'validate'.Str::ucfirst($key).'Attribute';
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    protected function hasAttributeValidationMethod(string $key): bool
+    {
+        return method_exists($this, $this->getAttributeValidationMethod($key));
     }
 
     /**
@@ -222,7 +195,17 @@ abstract class Element
      */
     protected function getAttributesString(): string
     {
-        return $this->buildAttributesString($this->attributes);
+        $properties = get_object_vars($this);
+
+        $attributes = [];
+
+        foreach ($properties as $name => $value) {
+            if (Str::startsWith($name, 'attribute')) {
+                $attributes[$this->convertPropertyNameToAttributeName($name)] = $value;
+            }
+        }
+
+        return $this->buildAttributesString($attributes);
     }
 
     /**
@@ -243,16 +226,30 @@ abstract class Element
         $string = [];
 
         $validAttributes = array_filter($attributes, function ($attribute) {
-            return (bool) $attribute;
+            return $attribute !== false;
         });
 
         $prefix = $prefix ? "{$prefix}-" : '';
 
         foreach ($validAttributes as $key => $value) {
-            $string[] = "{$prefix}{$key}=\"{$value}\"";
+            // True values mean that the attribute should be treated
+            // as a non-value one like `required` or `checked`
+            if ($value === true) {
+                $string[] = $key;
+            } else {
+                $string[] = "{$prefix}{$key}=\"{$value}\"";
+            }
         }
 
         return count($string) ? ' '.implode(' ', $string) : '';
+    }
+
+    /**
+     * @return string|bool
+     */
+    protected function getTransformedContent()
+    {
+        return $this->content;
     }
 
     /**
@@ -260,7 +257,7 @@ abstract class Element
      */
     protected function getTagPattern(): string
     {
-        return '<%s%s%s%s>';
+        return '<%s%s%s>';
     }
 
     /**
@@ -270,7 +267,6 @@ abstract class Element
     {
         return [
             $this->tag,
-            $this->getCustomAttributesString(),
             $this->getAttributesString(),
             $this->getDataAttributesString(),
         ];
@@ -281,7 +277,7 @@ abstract class Element
      */
     protected function getClosedTagPattern(): string
     {
-        return '<%s%s%s%s>%s</%s>';
+        return '<%s%s%s>%s</%s>';
     }
 
     /**
@@ -291,12 +287,33 @@ abstract class Element
     {
         return [
             $this->tag,
-            $this->getCustomAttributesString(),
             $this->getAttributesString(),
             $this->getDataAttributesString(),
-            $this->content,
+            $this->getTransformedContent(),
             $this->tag,
         ];
+    }
+
+    /**
+     * @param mixed $value
+     */
+    protected function validateDataAttributeValue($value): void
+    {
+        if (is_bool($value)) {
+            return;
+        }
+
+        if (! is_scalar($value)) {
+            throw new InvalidArgumentException('Only scalar values can be passed to data attributes.');
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function close()
+    {
+        return $this->closeTag ? "</{$this->tag}>" : '';
     }
 
     /**
@@ -306,8 +323,6 @@ abstract class Element
     public function __isset(string $key): bool
     {
         if ($this->hasAttribute($key)) {
-            return true;
-        } elseif ($this->hasCustomAttribute($key)) {
             return true;
         } elseif ($this->isDataAttribute($key)) {
             return $this->hasDataAttribute($key);
@@ -325,14 +340,18 @@ abstract class Element
     public function __set(string $key, $value): void
     {
         if ($this->hasAttribute($key)) {
-            $this->attributes[$key] = $value;
+            // Perform attribute validation, if needed
+            if ($this->hasAttributeValidationMethod($key)) {
+                $this->{$this->getAttributeValidationMethod($key)}($value);
+            }
+
+            $this->{$this->getInternalAttributeKey($key)} = $value;
 
             return;
-        } elseif ($this->hasCustomAttribute($key)) {
-            $this->customAttributes[$key] = $value;
-
-            return;
+        // Because data attributes are set on the fly we don't have to check for their existence
         } elseif ($this->isDataAttribute($key)) {
+            $this->validateDataAttributeValue($value);
+
             $this->dataAttributes[$this->getInternalDataAttributeKey($key)] = $value;
 
             return;
@@ -348,10 +367,8 @@ abstract class Element
     public function __get(string $key)
     {
         if ($this->hasAttribute($key)) {
-            return $this->attributes[$key];
-        } elseif ($this->hasCustomAttribute($key)) {
-            return $this->customAttributes[$key];
-        } elseif ($this->isDataAttribute($key)) {
+            return $this->{$this->getInternalAttributeKey($key)};
+        } elseif ($this->isDataAttribute($key) && $this->hasDataAttribute($key)) {
             return $this->dataAttributes[$this->getInternalDataAttributeKey($key)];
         }
 
@@ -366,23 +383,23 @@ abstract class Element
     public function __call(string $name, array $arguments): Element
     {
         if ($this->hasAttribute($name)) {
-            $this->attributes[$name] = $arguments[0] ?? false;
-
-            return $this;
-        } elseif ($this->hasCustomAttribute($name)) {
-            $this->customAttributes[$name] = $arguments[0] ?? false;
-
-            return $this;
-        } elseif ($this->isDataAttribute($name)) {
-            $data = is_array($arguments[0]) ? $arguments[0] : [$arguments[0]];
-
-            foreach ($data as $key => $value) {
-                if (! is_scalar($value)) {
-                    throw new InvalidArgumentException('Only scalar values can be passed to data attributes.');
-                }
-
-                $this->dataAttributes[$key] = $value;
+            // Perform attribute validation, if needed
+            if ($this->hasAttributeValidationMethod($name)) {
+                $this->{$this->getAttributeValidationMethod($name)}($arguments[0] ?? false);
             }
+
+            $this->{$this->getInternalAttributeKey($name)} = $arguments[0] ?? false;
+
+            return $this;
+        // Because data attributes are set on the fly we don't have to check for their existence
+        } elseif ($this->isDataAttribute($name)) {
+            if (count($arguments) == 0) {
+                return $this;
+            }
+
+            $this->validateDataAttributeValue($arguments[0]);
+
+            $this->dataAttributes[$this->getInternalDataAttributeKey($name)] = $arguments[0];
 
             return $this;
         }

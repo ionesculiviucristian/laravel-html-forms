@@ -5,71 +5,29 @@ namespace ionesculiviucristian\LaravelHtmlForms\Tests;
 use BadMethodCallException;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use ionesculiviucristian\LaravelHtmlForms\Traits\HasCheckedAttribute;
+use ionesculiviucristian\LaravelHtmlForms\Traits\HasMultipleAttribute;
+use ionesculiviucristian\LaravelHtmlForms\Traits\InteractsWithForms;
 use Orchestra\Testbench\TestCase;
 use ionesculiviucristian\LaravelHtmlForms\Element;
 
 class ElementTest extends TestCase
 {
     /** @test */
-    public function it_sets_the_custom_attributes_correctly(): void
-    {
-        $element = new class extends Element {
-        };
-
-        // Method assignment
-        $element->setCustomAttributes([
-            'customAttribute1' => 'custom-attribute1-value',
-            'customAttribute2' => 'custom-attribute2-value',
-        ]);
-
-        $customAttributes = $element->getCustomAttributes();
-
-        foreach ($customAttributes as $customAttribute => $startValue) {
-            $element->{$customAttribute}($value = Str::random(5));
-
-            $this->assertEquals($value, $element->{$customAttribute});
-        }
-
-        // Direct assignment
-        $element->customAttribute1 = 'new-custom-attribute1-value';
-        $element->customAttribute2 = 'new-custom-attribute2-value';
-
-        $customAttributes = $element->getCustomAttributes();
-
-        foreach ($customAttributes as $customAttribute => $startValue) {
-            $element->{$customAttribute}($value = Str::random(5));
-
-            $this->assertEquals($value, $element->{$customAttribute});
-        }
-    }
-
-    /** @test */
     public function it_sets_the_attributes_correctly(): void
     {
         $element = new class extends Element {
+            protected $attributeTest1 = false;
+            protected $attributeTest2 = false;
         };
 
-        // Method assignment
-        $element->setAttributes([
-            'attribute1' => 'attribute1-value',
-            'attribute2' => 'attribute2-value',
-        ]);
-
-        $attributes = $element->getAttributes();
-
-        foreach ($attributes as $attribute => $startValue) {
-            $element->{$attribute}($value = Str::random(5));
+        foreach (['test1', 'test2'] as $attribute) {
+            // Through setter
+            $element->{$attribute} = ($value = Str::random(5));
 
             $this->assertEquals($value, $element->{$attribute});
-        }
 
-        // Direct assignment
-        $element->attribute1 = 'new-attribute1-value';
-        $element->attribute2 = 'new-attribute2-value';
-
-        $attributes = $element->getAttributes();
-
-        foreach ($attributes as $attribute => $startValue) {
+            // Through call
             $element->{$attribute}($value = Str::random(5));
 
             $this->assertEquals($value, $element->{$attribute});
@@ -80,30 +38,28 @@ class ElementTest extends TestCase
     public function it_sets_the_data_attributes_correctly(): void
     {
         $element = new class extends Element {
+            protected $dataAttributes = [
+                'test1' => false,
+                'test2' => false,
+            ];
         };
 
-        // Method assignment
-        $element->setDataAttributes([
-            'key1' => 'data-value1',
-            'key2' => 'data-value2',
-            'key3' => 'data-value3',
-        ]);
+        foreach (['test1', 'test2'] as $dataAttribute) {
+            $dataAttribute = 'data'.ucfirst($dataAttribute);
 
-        $dataAttributes = $element->getDataAttributes();
+            // Through setter
+            $element->{$dataAttribute} = ($value = Str::random(5));
 
-        foreach ($dataAttributes as $dataAttribute => $value) {
-            $this->assertEquals($value, $element->{'data'.ucfirst($dataAttribute)});
-        }
+            $this->assertEquals($value, $element->{$dataAttribute});
 
-        // Direct assignment
-        $element->dataKey1 = 'new-data-value1';
-        $element->dataKey2 = 'new-data-value2';
-        $element->dataKey3 = 'new-data-value3';
+            // Through call
+            $element->{$dataAttribute}($value = Str::random(5));
 
-        $dataAttributes = $element->getDataAttributes();
+            $this->assertEquals($value, $element->{$dataAttribute});
 
-        foreach ($dataAttributes as $dataAttribute => $value) {
-            $this->assertEquals($value, $element->{'data'.ucfirst($dataAttribute)});
+            $element->{$dataAttribute}();
+
+            $this->assertEquals($value, $element->{$dataAttribute});
         }
     }
 
@@ -113,54 +69,79 @@ class ElementTest extends TestCase
         $element = new class extends Element {
         };
 
-        $element->setTag('test')->content('content test');
+        $element->setTag('test')->setCloseTag(true)->setContent('content test');
 
         $this->assertEquals('test', $element->getTag());
 
+        $this->assertEquals(true, $element->getCloseTag());
+
         $this->assertEquals('content test', $element->getContent());
+    }
+
+    /** @test */
+    public function it_sets_the_non_value_attributes_correctly()
+    {
+        $attributes = [
+            'checked',
+            'multiple',
+            'required',
+            'disabled',
+            'readonly',
+        ];
+
+        foreach ($attributes as $attribute) {
+            $element = new class extends Element {
+                use InteractsWithForms;
+                use HasCheckedAttribute;
+                use HasMultipleAttribute;
+
+                protected $tag = 'input';
+
+                protected $closeTag = false;
+            };
+
+            $element->{$attribute}(true);
+
+            $this->assertEquals("<input {$attribute}>", (string) $element);
+        }
     }
 
     /** @test */
     public function it_can_check_for_attributes_existence_correctly(): void
     {
         $element = new class extends Element {
+            protected $attributeTest1 = false;
+            protected $attributeTest2 = false;
+
+            protected $dataAttributes = [
+                'test1' => false,
+                'test2' => false,
+            ];
         };
 
-        $element->setAttributes([
-            'attribute1' => 'attribute1-value',
-            'attribute2' => 'attribute2-value',
-        ]);
-
-        $element->setCustomAttributes([
-            'customAttribute1' => 'custom-attribute1-value',
-            'customAttribute2' => 'custom-attribute2-value',
-        ]);
-
-        $element->setDataAttributes([
-            'key1' => 'data-value1',
-            'key2' => 'data-value2',
-            'key3' => 'data-value3',
-        ]);
-
-        $attributes = $element->getAttributes();
-
-        foreach ($attributes as $attribute => $startValue) {
+        foreach (['test1', 'test2'] as $attribute) {
             $this->assertTrue(isset($element->{$attribute}));
         }
 
-        $customAttributes = $element->getCustomAttributes();
-
-        foreach ($customAttributes as $customAttribute => $startValue) {
-            $this->assertTrue(isset($element->{$customAttribute}));
-        }
-
-        $dataAttributes = $element->getDataAttributes();
-
-        foreach ($dataAttributes as $dataAttribute => $value) {
+        foreach (['test1', 'test2'] as $dataAttribute) {
             $this->assertTrue(isset($element->{'data'.ucfirst($dataAttribute)}));
         }
 
         $this->assertFalse(isset($element->test));
+    }
+
+    /** @test */
+    public function it_closes_the_tag_correctly()
+    {
+        $element = new class extends Element {
+            protected $tag = 'test';
+        };
+
+        $this->assertEquals('</test>', $element->close());
+
+        $element->setCloseTag(false);
+
+        $this->assertEquals('', $element->close());
     }
 
     /** @test */
@@ -186,6 +167,17 @@ class ElementTest extends TestCase
     }
 
     /** @test */
+    public function it_throws_an_exception_when_getting_undefined_data_attributes(): void
+    {
+        $element = new class extends Element {
+        };
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $element->dataTest;
+    }
+
+    /** @test */
     public function it_throws_an_exception_when_calling_undefined_methods(): void
     {
         $element = new class extends Element {
@@ -197,21 +189,42 @@ class ElementTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_an_exception_when_setting_non_scalar_values_on_data_attributes(): void
+    public function it_throws_an_exception_when_setting_non_scalar_values_on_data_attributes_through_setter(): void
     {
-        $element1 = new class extends Element {
-        };
-
-        $element1->data(['key1' => 'value1']);
-
-        $this->addToAssertionCount(1);
-
-        $element2 = new class extends Element {
+        $element = new class extends Element {
+            protected $dataAttributes = [
+                'key1' => false
+            ];
         };
 
         $this->expectException(InvalidArgumentException::class);
 
-        $element2->data(['key2' => []]);
+        $element->dataKey1 = ['test'];
+    }
+
+    /** @test */
+    public function it_throws_an_exception_when_setting_non_scalar_values_on_data_attributes_through_call(): void
+    {
+        $element = new class extends Element {
+            protected $dataAttributes = [
+                'key1' => false
+            ];
+        };
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $element->dataKey1(['test']);
+    }
+
+    /** @test */
+    public function it_validates_boolean_values_assigned_to_data_attribute()
+    {
+        $element = new class extends Element {
+        };
+
+        $element->dataTest = false;
+
+        $this->addToAssertionCount(1);
     }
 
     /** @test */
@@ -248,27 +261,6 @@ class ElementTest extends TestCase
     }
 
     /** @test */
-    public function it_renders_the_custom_attributes_correctly(): void
-    {
-        $element = new class extends Element {
-        };
-
-        $element->setTag('test');
-
-        $element->setCustomAttributes([
-            'custom1' => false,
-            'custom2' => false,
-        ]);
-
-        $this->assertEquals(
-            '<test custom1="custom1-value" custom2="custom2-value"></test>',
-            (string) $element
-                ->custom1('custom1-value')
-                ->custom2('custom2-value')
-        );
-    }
-
-    /** @test */
     public function it_renders_the_attributes_correctly(): void
     {
         $element = new class extends Element {
@@ -283,7 +275,7 @@ class ElementTest extends TestCase
                 ->id('my-id')
                 ->class('my-class')
                 ->style('width:100px;height:50px')
-                ->content('my content')
+                ->setContent('my content')
         );
     }
 
@@ -291,16 +283,18 @@ class ElementTest extends TestCase
     public function it_renders_the_data_attributes_correctly(): void
     {
         $element = new class extends Element {
+            protected $dataAttributes = [
+                'test1' => false,
+                'test2' => false,
+            ];
         };
         $element->setTag('test');
 
         $this->assertEquals(
             '<test data-test1="test1-value" data-test2="test2-value"></test>',
             (string) $element
-                ->data([
-                    'test1' => 'test1-value',
-                    'test2' => 'test2-value',
-                ])
+                ->dataTest1('test1-value')
+                ->dataTest2('test2-value')
         );
     }
 }
