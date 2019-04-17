@@ -6,7 +6,7 @@
 - [x] data() function for autocomplete purposes
 - [x] add get/put/delete methods to forms
 - [x] add CSRF token
-- [ ] add Laravel service provider
+- [x] add Laravel service provider
 - [x] handle put/delete param in Form::method()
 
 ### 1.2.x
