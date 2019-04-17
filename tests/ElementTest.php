@@ -41,9 +41,11 @@ class ElementTest extends TestCase
             protected $tag = 'test';
         };
 
-        $element->class('class1')->class('class2')->class(false);
+        $element->class('class1')->class('class2')->jsClass('class3')->class(false);
 
-        $this->assertEquals('<test class="class1 class2"></test>', (string) $element);
+        $this->assertEquals('<test class="class1 class2 js-class3"></test>', (string) $element);
+
+        $this->assertEquals(['class1', 'class2', 'js-class3'], $element->class);
 
         $element2 = new class extends Element {
             protected $tag = 'test';
@@ -52,6 +54,8 @@ class ElementTest extends TestCase
         $element2->style('color:red')->style('display:block')->style(false);
 
         $this->assertEquals('<test style="color:red;display:block"></test>', (string) $element2);
+
+        $this->assertEquals(['color:red', 'display:block'], $element2->style);
     }
 
     /** @test */
@@ -62,7 +66,7 @@ class ElementTest extends TestCase
 
         $element->jsClass('test');
 
-        $this->assertEquals('js-test', $element->class);
+        $this->assertEquals(['js-test'], $element->class);
     }
 
     /** @test */

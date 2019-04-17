@@ -8,7 +8,6 @@
 - [x] add CSRF token
 - [ ] add Laravel service provider
 - [x] handle put/delete param in Form::method()
-- [ ] make data attributes work as regular attributes
 
 ### 1.2.x
 - [ ] add Option element

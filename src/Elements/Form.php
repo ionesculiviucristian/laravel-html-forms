@@ -149,9 +149,9 @@ class Form extends Element
     }
 
     /**
-     * @return string|bool
+     * @return string
      */
-    protected function getTransformedContent()
+    protected function getTransformedContent(): string
     {
         // This should happen when using get/post/put/delete methods or when set manually
         if ($this->content) {

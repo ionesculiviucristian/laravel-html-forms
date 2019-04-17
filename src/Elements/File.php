@@ -38,7 +38,7 @@ class File extends Element
     /**
      * @return File
      */
-    public function acceptImages()
+    public function acceptImages(): File
     {
         $this->attributeAccept = 'image/*';
 
@@ -48,7 +48,7 @@ class File extends Element
     /**
      * @return File
      */
-    public function acceptDocuments()
+    public function acceptDocuments(): File
     {
         $this->attributeAccept = '.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 

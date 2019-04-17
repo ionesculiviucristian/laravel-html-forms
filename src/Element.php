@@ -5,8 +5,9 @@ namespace ionesculiviucristian\LaravelHtmlForms;
 use Exception;
 use RuntimeException;
 use BadMethodCallException;
-use Illuminate\Support\Str;
 use InvalidArgumentException;
+use ionesculiviucristian\LaravelHtmlForms\Traits\HasAttributes;
+use ionesculiviucristian\LaravelHtmlForms\Traits\HasDataAttributes;
 
 /**
  * @property string|bool $id
@@ -21,6 +22,9 @@ use InvalidArgumentException;
  */
 abstract class Element
 {
+    use HasAttributes;
+    use HasDataAttributes;
+
     /**
      * @var string
      */
@@ -52,7 +56,7 @@ abstract class Element
     protected $attributeClass = false;
 
     /**
-     * @var string
+     * @var array|bool
      */
     protected $attributeStyle = false;
 
@@ -119,235 +123,27 @@ abstract class Element
     }
 
     /**
-     * @param string $key
-     * @return string
+     * @param string|bool $class
+     * @return Element
      */
-    protected function getInternalAttributeKey(string $key): string
+    public function jsClass($class): Element
     {
-        return 'attribute'.Str::ucfirst($key);
+        $this->attributeClass = $this->transformInternalClassAttribute($class === false ? false : "js-{$class}");
+
+        return $this;
     }
 
     /**
-     * @param string $key
-     * @return bool
+     * @param array $data
+     * @return Element
      */
-    protected function hasAttribute(string $key): bool
+    public function data(array $data)
     {
-        return property_exists($this, $this->getInternalAttributeKey($key));
-    }
-
-    /**
-     * @param string $key
-     * @return string
-     */
-    protected function getInternalDataAttributeKey(string $key): string
-    {
-        return lcfirst(Str::substr($key, 4));
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    protected function hasDataAttribute(string $key): bool
-    {
-        return array_key_exists($this->getInternalDataAttributeKey($key), $this->dataAttributes);
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    protected function isDataAttribute(string $key): bool
-    {
-        return Str::startsWith($key, 'data');
-    }
-
-    /**
-     * @param string $property
-     * @return string
-     */
-    protected function convertPropertyNameToAttributeName(string $property): string
-    {
-        return Str::slug(Str::substr($property, 9), '-');
-    }
-
-    /**
-     * @param string $key
-     * @return string
-     */
-    protected function getAttributeValidationMethod(string $key): string
-    {
-        return 'validate'.Str::ucfirst($key).'Attribute';
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    protected function hasAttributeValidationMethod(string $key): bool
-    {
-        return method_exists($this, $this->getAttributeValidationMethod($key));
-    }
-
-    /**
-     * @param string $key
-     * @return string
-     */
-    protected function getTransformInternalAttributeMethod(string $key): string
-    {
-        return 'transformInternal'.Str::ucfirst($key).'Attribute';
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    protected function hasTransformInternalAttributeMethod(string $key): bool
-    {
-        return method_exists($this, $this->getTransformInternalAttributeMethod($key));
-    }
-
-    /**
-     * @param string $key
-     * @return string
-     */
-    protected function getTransformOutputAttributeMethod(string $key): string
-    {
-        return 'transformOutput'.Str::ucfirst($key).'Attribute';
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    protected function hasTransformOutputAttributeMethod(string $key): bool
-    {
-        return method_exists($this, $this->getTransformOutputAttributeMethod($key));
-    }
-
-    /**
-     * @return string
-     */
-    protected function getAttributesString(): string
-    {
-        $properties = get_object_vars($this);
-
-        $attributes = [];
-
-        foreach ($properties as $name => $value) {
-            if (Str::startsWith($name, 'attribute')) {
-                $attribute = $this->convertPropertyNameToAttributeName($name);
-
-                $attributes[$attribute] =
-                    $this->hasTransformOutputAttributeMethod($attribute) ?
-                        $this->{$this->getTransformOutputAttributeMethod($attribute)}($value) : $value;
-            }
+        foreach ($data as $key => $value) {
+            $this->dataAttributes[$key] = $value;
         }
 
-        return $this->buildAttributesString($attributes);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getDataAttributesString(): string
-    {
-        return $this->buildAttributesString($this->dataAttributes, 'data');
-    }
-
-    /**
-     * @param string $name
-     * @param $value
-     * @return array|bool
-     */
-    protected function transformInternalAttribute(string $name, $value)
-    {
-        if (is_bool($value)) {
-            return $this->{$name};
-        }
-
-        return is_array($this->{$name}) ? array_merge($this->{$name}, [$value]) : [$value];
-    }
-
-    /**
-     * @param string $name
-     * @param string $glue
-     * @return string|bool
-     */
-    protected function transformOutputAttribute(string $name, string $glue = ' ')
-    {
-        return is_array($this->{$name}) && count($this->{$name}) ? implode($glue, $this->{$name}) : false;
-    }
-
-    /**
-     * @param $value
-     * @return array|bool
-     */
-    protected function transformInternalClassAttribute($value)
-    {
-        return $this->transformInternalAttribute('attributeClass', $value);
-    }
-
-    /**
-     * @return string|bool
-     */
-    protected function transformOutputClassAttribute()
-    {
-        return $this->transformOutputAttribute('attributeClass');
-    }
-
-    /**
-     * @param $value
-     * @return array|bool
-     */
-    protected function transformInternalStyleAttribute($value)
-    {
-        return $this->transformInternalAttribute('attributeStyle', $value);
-    }
-
-    /**
-     * @return string|bool
-     */
-    protected function transformOutputStyleAttribute()
-    {
-        return $this->transformOutputAttribute('attributeStyle', ';');
-    }
-
-    /**
-     * @param array $attributes
-     * @param string|null $prefix
-     * @return string
-     */
-    protected function buildAttributesString(array $attributes, $prefix = null): string
-    {
-        $string = [];
-
-        $validAttributes = array_filter($attributes, function ($attribute) {
-            return $attribute !== false;
-        });
-
-        $prefix = $prefix ? "{$prefix}-" : '';
-
-        foreach ($validAttributes as $key => $value) {
-            // True values mean that the attribute should be treated
-            // as a non-value one like `required` or `checked`
-            if ($value === true) {
-                $string[] = $key;
-            } else {
-                $string[] = "{$prefix}{$key}=\"{$value}\"";
-            }
-        }
-
-        return count($string) ? ' '.implode(' ', $string) : '';
-    }
-
-    /**
-     * @return string|bool
-     */
-    protected function getTransformedContent()
-    {
-        return $this->content;
+        return $this;
     }
 
     /**
@@ -394,20 +190,6 @@ abstract class Element
     }
 
     /**
-     * @param mixed $value
-     */
-    protected function validateDataAttributeValue($value): void
-    {
-        if (is_bool($value)) {
-            return;
-        }
-
-        if (! is_scalar($value)) {
-            throw new InvalidArgumentException('Only scalar values can be passed to data attributes.');
-        }
-    }
-
-    /**
      * @return string
      */
     public function close()
@@ -416,27 +198,53 @@ abstract class Element
     }
 
     /**
-     * @param string|bool $class
-     * @return Element
+     * @return string|bool
      */
-    public function jsClass($class): Element
+    protected function getTransformedContent()
     {
-        $this->attributeClass = $class === false ? false : "js-{$class}";
-
-        return $this;
+        return $this->content;
     }
 
     /**
-     * @param array $data
-     * @return Element
+     * @param $value
+     * @return array|bool
      */
-    public function data(array $data)
+    protected function transformInternalClassAttribute($value)
     {
-        foreach ($data as $key => $value) {
-            $this->dataAttributes[$key] = $value;
-        }
+        return $this->transformInternalAttribute('attributeClass', $value);
+    }
 
-        return $this;
+    /**
+     * @return string|bool
+     */
+    protected function transformOutputClassAttribute()
+    {
+        return $this->transformOutputAttribute('attributeClass');
+    }
+
+    /**
+     * @param $value
+     * @return array|bool
+     */
+    protected function transformInternalStyleAttribute($value)
+    {
+        return $this->transformInternalAttribute('attributeStyle', $value);
+    }
+
+    /**
+     * @return string|bool
+     */
+    protected function transformOutputStyleAttribute()
+    {
+        return $this->transformOutputAttribute('attributeStyle', ';');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getDataAttributesString(): string
+    {
+        return $this->buildAttributesString($this->dataAttributes, 'data');
     }
 
     /**

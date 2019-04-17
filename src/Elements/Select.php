@@ -89,9 +89,9 @@ class Select extends Element
     }
 
     /**
-     * @return string|bool
+     * @return string
      */
-    protected function getTransformedContent()
+    protected function getTransformedContent(): string
     {
         $optionsString = '';
 
