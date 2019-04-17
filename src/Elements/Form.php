@@ -182,7 +182,7 @@ class Form extends Element
      * @param string $method
      * @return string
      */
-    protected function transformMethodAttribute(string $method): string
+    protected function transformOutputMethodAttribute(string $method): string
     {
         if (in_array($method, ['put', 'delete'])) {
             return 'post';

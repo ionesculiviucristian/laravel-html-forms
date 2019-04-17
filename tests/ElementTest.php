@@ -35,6 +35,26 @@ class ElementTest extends TestCase
     }
 
     /** @test */
+    public function it_supports_mergeable_attributes(): void
+    {
+        $element = new class extends Element {
+            protected $tag = 'test';
+        };
+
+        $element->class('class1')->class('class2')->class(false);
+
+        $this->assertEquals('<test class="class1 class2"></test>', (string) $element);
+
+        $element2 = new class extends Element {
+            protected $tag = 'test';
+        };
+
+        $element2->style('color:red')->style('display:block')->style(false);
+
+        $this->assertEquals('<test style="color:red;display:block"></test>', (string) $element2);
+    }
+
+    /** @test */
     public function it_sets_the_js_class_correctly()
     {
         $element = new class extends Element {

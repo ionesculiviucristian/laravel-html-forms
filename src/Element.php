@@ -47,7 +47,7 @@ abstract class Element
     protected $attributeId = false;
 
     /**
-     * @var string
+     * @var array|bool
      */
     protected $attributeClass = false;
 
@@ -194,18 +194,36 @@ abstract class Element
      * @param string $key
      * @return string
      */
-    protected function getTransformAttributeMethod(string $key): string
+    protected function getTransformInternalAttributeMethod(string $key): string
     {
-        return 'transform'.Str::ucfirst($key).'Attribute';
+        return 'transformInternal'.Str::ucfirst($key).'Attribute';
     }
 
     /**
      * @param string $key
      * @return bool
      */
-    protected function hasTransformAttributeMethod(string $key): bool
+    protected function hasTransformInternalAttributeMethod(string $key): bool
     {
-        return method_exists($this, $this->getTransformAttributeMethod($key));
+        return method_exists($this, $this->getTransformInternalAttributeMethod($key));
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    protected function getTransformOutputAttributeMethod(string $key): string
+    {
+        return 'transformOutput'.Str::ucfirst($key).'Attribute';
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    protected function hasTransformOutputAttributeMethod(string $key): bool
+    {
+        return method_exists($this, $this->getTransformOutputAttributeMethod($key));
     }
 
     /**
@@ -222,8 +240,8 @@ abstract class Element
                 $attribute = $this->convertPropertyNameToAttributeName($name);
 
                 $attributes[$attribute] =
-                    $this->hasTransformAttributeMethod($attribute) ?
-                        $this->{$this->getTransformAttributeMethod($attribute)}($value) : $value;
+                    $this->hasTransformOutputAttributeMethod($attribute) ?
+                        $this->{$this->getTransformOutputAttributeMethod($attribute)}($value) : $value;
             }
         }
 
@@ -236,6 +254,64 @@ abstract class Element
     protected function getDataAttributesString(): string
     {
         return $this->buildAttributesString($this->dataAttributes, 'data');
+    }
+
+    /**
+     * @param string $name
+     * @param $value
+     * @return array|bool
+     */
+    protected function transformInternalAttribute(string $name, $value)
+    {
+        if (is_bool($value)) {
+            return $this->{$name};
+        }
+
+        return is_array($this->{$name}) ? array_merge($this->{$name}, [$value]) : [$value];
+    }
+
+    /**
+     * @param string $name
+     * @param string $glue
+     * @return string|bool
+     */
+    protected function transformOutputAttribute(string $name, string $glue = ' ')
+    {
+        return is_array($this->{$name}) && count($this->{$name}) ? implode($glue, $this->{$name}) : false;
+    }
+
+    /**
+     * @param $value
+     * @return array|bool
+     */
+    protected function transformInternalClassAttribute($value)
+    {
+        return $this->transformInternalAttribute('attributeClass', $value);
+    }
+
+    /**
+     * @return string|bool
+     */
+    protected function transformOutputClassAttribute()
+    {
+        return $this->transformOutputAttribute('attributeClass');
+    }
+
+    /**
+     * @param $value
+     * @return array|bool
+     */
+    protected function transformInternalStyleAttribute($value)
+    {
+        return $this->transformInternalAttribute('attributeStyle', $value);
+    }
+
+    /**
+     * @return string|bool
+     */
+    protected function transformOutputStyleAttribute()
+    {
+        return $this->transformOutputAttribute('attributeStyle', ';');
     }
 
     /**
@@ -392,7 +468,8 @@ abstract class Element
                 $this->{$this->getAttributeValidationMethod($key)}($value);
             }
 
-            $this->{$this->getInternalAttributeKey($key)} = $value;
+            $this->{$this->getInternalAttributeKey($key)} = $this->hasTransformInternalAttributeMethod($key) ?
+                $this->{$this->getTransformInternalAttributeMethod($key)}($value) : $value;
 
             return;
         // Because data attributes are set on the fly we don't have to check for their existence
