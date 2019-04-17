@@ -11,5 +11,8 @@ class Checkbox extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'checkbox'; }
+    protected static function getFacadeAccessor()
+    {
+        return 'checkbox';
+    }
 }

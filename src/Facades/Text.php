@@ -11,5 +11,8 @@ class Text extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'text'; }
+    protected static function getFacadeAccessor()
+    {
+        return 'text';
+    }
 }

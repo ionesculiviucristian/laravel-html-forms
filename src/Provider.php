@@ -22,7 +22,7 @@ class Provider extends ServiceProvider
         $loader = AliasLoader::getInstance();
 
         foreach ($facades as $facade => $name) {
-            $this->app->bind($facade, function() use ($name) {
+            $this->app->bind($facade, function () use ($name) {
                 $class = "ionesculiviucristian\LaravelHtmlForms\Elements\\{$name}";
 
                 return new $class;

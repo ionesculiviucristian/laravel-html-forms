@@ -11,5 +11,8 @@ class Button extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'button'; }
+    protected static function getFacadeAccessor()
+    {
+        return 'button';
+    }
 }
