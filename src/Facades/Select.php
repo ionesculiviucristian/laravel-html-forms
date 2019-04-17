@@ -11,5 +11,8 @@ class Select extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'select'; }
+    protected static function getFacadeAccessor()
+    {
+        return 'select';
+    }
 }

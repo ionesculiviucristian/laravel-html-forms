@@ -11,5 +11,8 @@ class Radio extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'radio'; }
+    protected static function getFacadeAccessor()
+    {
+        return 'radio';
+    }
 }

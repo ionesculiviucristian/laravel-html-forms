@@ -11,5 +11,8 @@ class Hidden extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'hidden'; }
+    protected static function getFacadeAccessor()
+    {
+        return 'hidden';
+    }
 }

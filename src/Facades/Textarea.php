@@ -11,5 +11,8 @@ class Textarea extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'textarea'; }
+    protected static function getFacadeAccessor()
+    {
+        return 'textarea';
+    }
 }
