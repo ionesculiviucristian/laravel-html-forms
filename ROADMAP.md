@@ -22,3 +22,4 @@
 - [ ] add optgroup element
 - [ ] add table element
 - [ ] add documentation
+- [ ] find a way to have autocomplete with specific element attributes

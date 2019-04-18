@@ -17,6 +17,27 @@ class ButtonTest extends TestCase
         $button->type('submit');
 
         $this->assertEquals('<input type="submit">', (string) $button);
+
+        $button2 = new class extends Button {
+        };
+
+        $button2->submit();
+
+        $this->assertEquals('<input type="submit">', (string) $button2);
+
+        $button3 = new class extends Button {
+        };
+
+        $button3->reset();
+
+        $this->assertEquals('<input type="reset">', (string) $button3);
+
+        $button4 = new class extends Button {
+        };
+
+        $button4->button();
+
+        $this->assertEquals('<input type="button">', (string) $button4);
     }
 
     /** @test */

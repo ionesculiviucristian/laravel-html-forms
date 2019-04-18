@@ -6,6 +6,11 @@ use ionesculiviucristian\LaravelHtmlForms\Element;
 use ionesculiviucristian\LaravelHtmlForms\Traits\HasValueAttribute;
 use ionesculiviucristian\LaravelHtmlForms\Traits\HasDisabledAttribute;
 
+/**
+ * @property bool $selected
+ *
+ * @method self selected(bool $value)
+ */
 class Option extends Element
 {
     use HasValueAttribute;

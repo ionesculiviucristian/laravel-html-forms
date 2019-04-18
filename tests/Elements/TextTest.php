@@ -14,9 +14,11 @@ class TextTest extends TestCase
         $text = new class extends Text {
         };
 
-        $text->autocomplete('off');
+        $text
+            ->autofocus(true)
+            ->autocomplete('off');
 
-        $this->assertEquals('<input type="text" autocomplete="off">', (string) $text);
+        $this->assertEquals('<input type="text" autocomplete="off" autofocus>', (string) $text);
     }
 
     /** @test */

@@ -14,6 +14,7 @@ class OptionTest extends TestCase
         };
 
         $option
+            ->selected(false)
             ->value('value1')
             ->setContent('test1');
 
