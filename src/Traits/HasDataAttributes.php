@@ -7,6 +7,11 @@ use Illuminate\Support\Str;
 trait HasDataAttributes
 {
     /**
+     * @var array
+     */
+    protected $dataAttributes = [];
+
+    /**
      * @param string $key
      * @return string
      */

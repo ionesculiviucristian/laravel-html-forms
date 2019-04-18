@@ -61,11 +61,6 @@ abstract class Element
     protected $attributeStyle = false;
 
     /**
-     * @var array
-     */
-    protected $dataAttributes = [];
-
-    /**
      * @param string $tag
      * @return Element
      */
