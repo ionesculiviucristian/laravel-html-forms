@@ -3,22 +3,22 @@
 namespace ionesculiviucristian\LaravelHtmlForms\Traits;
 
 /**
- * @property bool $checked
+ * @property bool $disabled
  *
- * @method self checked(bool $value)
+ * @method self disabled(bool $value)
  */
-trait HasCheckedAttribute
+trait HasDisabledAttribute
 {
     /**
      * @var string
      */
-    protected $attributeChecked = false;
+    protected $attributeDisabled = false;
 
     /**
      * @param mixed $value
      * @return bool
      */
-    protected function transformInternalCheckedAttribute($value): bool
+    protected function transformInternalDisabledAttribute($value): bool
     {
         return (bool) $value;
     }

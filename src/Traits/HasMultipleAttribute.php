@@ -13,4 +13,13 @@ trait HasMultipleAttribute
      * @var string
      */
     protected $attributeMultiple = false;
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    protected function transformInternalMultipleAttribute($value): bool
+    {
+        return (bool) $value;
+    }
 }

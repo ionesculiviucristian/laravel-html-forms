@@ -201,7 +201,7 @@ abstract class Element
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return array|bool
      */
     protected function transformInternalClassAttribute($value)
@@ -218,7 +218,7 @@ abstract class Element
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return array|bool
      */
     protected function transformInternalStyleAttribute($value)

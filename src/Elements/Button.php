@@ -23,6 +23,38 @@ class Button extends Element
         $this->setAsClosedInputTag();
 
         $this->attributeType = 'button';
+
+        $this->disabledAttributes = ['required', 'readonly', 'autocomplete'];
+    }
+
+    /**
+     * @return Button
+     */
+    public function button(): Button
+    {
+        $this->type = 'button';
+
+        return $this;
+    }
+
+    /**
+     * @return Button
+     */
+    public function submit(): Button
+    {
+        $this->type = 'submit';
+
+        return $this;
+    }
+
+    /**
+     * @return Button
+     */
+    public function reset(): Button
+    {
+        $this->type = 'reset';
+
+        return $this;
     }
 
     /**

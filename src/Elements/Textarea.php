@@ -19,10 +19,10 @@ class Textarea extends Element
     protected $tag = 'textarea';
 
     /**
-     * @return bool
+     * Textarea constructor.
      */
-    protected function transformInternalValueAttribute()
+    public function __construct()
     {
-        return false;
+        $this->disabledAttributes = ['value'];
     }
 }

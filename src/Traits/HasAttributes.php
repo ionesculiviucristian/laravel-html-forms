@@ -3,10 +3,14 @@
 namespace ionesculiviucristian\LaravelHtmlForms\Traits;
 
 use Illuminate\Support\Str;
-use InvalidArgumentException;
 
 trait HasAttributes
 {
+    /**
+     * @var array
+     */
+    protected $disabledAttributes = [];
+
     /**
      * @param string $key
      * @return string
@@ -90,7 +94,7 @@ trait HasAttributes
 
     /**
      * @param string $name
-     * @param $value
+     * @param mixed $value
      * @return array|bool
      */
     protected function transformInternalAttribute(string $name, $value)
@@ -121,9 +125,9 @@ trait HasAttributes
     {
         $string = [];
 
-        $validAttributes = array_filter($attributes, function ($attribute) {
-            return $attribute !== false;
-        });
+        $validAttributes = array_filter($attributes, function ($value, $attribute) {
+            return ! in_array($attribute, $this->disabledAttributes) && $value !== false;
+        }, ARRAY_FILTER_USE_BOTH);
 
         $prefix = $prefix ? "{$prefix}-" : '';
 
@@ -160,19 +164,5 @@ trait HasAttributes
         }
 
         return $this->buildAttributesString($attributes);
-    }
-
-    /**
-     * @param mixed $value
-     */
-    protected function validateDataAttributeValue($value): void
-    {
-        if (is_bool($value)) {
-            return;
-        }
-
-        if (! is_scalar($value)) {
-            throw new InvalidArgumentException('Only scalar values can be passed to data attributes.');
-        }
     }
 }

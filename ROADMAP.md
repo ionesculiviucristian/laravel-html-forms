@@ -11,12 +11,14 @@
 
 ### 1.2.x
 - [x] add Option element
-- [ ] add remaining shorthands to elements
+- [x] add remaining shorthands to elements
 - [ ] integrate CSS frameworks
 
 ### 1.3.x 
+- [ ] add image element
 - [ ] new elements based on popular JS libraries
 
 ### 1.4.x
-- [ ] add tables
+- [ ] add optgroup element
+- [ ] add table element
 - [ ] add documentation

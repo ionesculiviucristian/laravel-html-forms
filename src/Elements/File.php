@@ -33,6 +33,8 @@ class File extends Element
         $this->setAsClosedInputTag();
 
         $this->attributeType = 'file';
+
+        $this->disabledAttributes = ['autocomplete'];
     }
 
     /**

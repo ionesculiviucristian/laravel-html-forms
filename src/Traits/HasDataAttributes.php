@@ -3,6 +3,7 @@
 namespace ionesculiviucristian\LaravelHtmlForms\Traits;
 
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 trait HasDataAttributes
 {
@@ -36,5 +37,19 @@ trait HasDataAttributes
     protected function isDataAttribute(string $key): bool
     {
         return Str::startsWith($key, 'data');
+    }
+
+    /**
+     * @param mixed $value
+     */
+    protected function validateDataAttributeValue($value): void
+    {
+        if (is_bool($value)) {
+            return;
+        }
+
+        if (! is_scalar($value)) {
+            throw new InvalidArgumentException('Only scalar values can be passed to data attributes.');
+        }
     }
 }

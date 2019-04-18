@@ -9,19 +9,20 @@ use InvalidArgumentException;
  * @property string|bool $name
  * @property string|bool $autocomplete
  * @property bool $required
- * @property bool $disabled
  * @property bool $readonly
+ * @property bool $autofocus
  *
  * @method self name(string|bool $value)
  * @method self autocomplete(string|bool $value)
  * @method self required(bool $value)
- * @method self disabled(bool $value)
  * @method self readonly(bool $value)
+ * @method self autofocus(bool $value)
  */
 trait InteractsWithForms
 {
     use HasTypeAttribute;
     use HasValueAttribute;
+    use HasDisabledAttribute;
 
     /**
      * @var string
@@ -34,19 +35,46 @@ trait InteractsWithForms
     protected $attributeAutocomplete = false;
 
     /**
-     * @var string
+     * @var bool
      */
     protected $attributeRequired = false;
 
     /**
-     * @var string
-     */
-    protected $attributeDisabled = false;
-
-    /**
-     * @var string
+     * @var bool
      */
     protected $attributeReadonly = false;
+
+    /**
+     * @var bool
+     */
+    protected $attributeAutofocus = false;
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    protected function transformInternalRequiredAttribute($value): bool
+    {
+        return (bool) $value;
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    protected function transformInternalReadonlyAttribute($value): bool
+    {
+        return (bool) $value;
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    protected function transformInternalAutofocusAttribute($value): bool
+    {
+        return (bool) $value;
+    }
 
     /**
      * @param mixed $value

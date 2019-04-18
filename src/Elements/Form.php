@@ -192,7 +192,7 @@ class Form extends Element
     }
 
     /**
-     * @param mixed $value
+     * @param string|bool $value
      * @throws InvalidArgumentException
      */
     protected function validateEnctypeAttribute($value): void
@@ -207,7 +207,7 @@ class Form extends Element
     }
 
     /**
-     * @param mixed $value
+     * @param string|bool $value
      * @throws InvalidArgumentException
      */
     protected function validateMethodAttribute($value): void

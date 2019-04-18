@@ -21,5 +21,12 @@ class Hidden extends Element
         $this->setAsClosedInputTag();
 
         $this->attributeType = 'hidden';
+
+        $this->disabledAttributes = [
+            'title',
+            'style',
+            'autofocus',
+            'readonly',
+        ];
     }
 }
