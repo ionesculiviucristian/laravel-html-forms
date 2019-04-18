@@ -3,8 +3,8 @@
 namespace ionesculiviucristian\LaravelHtmlForms\Tests\Elements;
 
 use Orchestra\Testbench\TestCase;
-use ionesculiviucristian\LaravelHtmlForms\Elements\Select;
 use ionesculiviucristian\LaravelHtmlForms\Elements\Option;
+use ionesculiviucristian\LaravelHtmlForms\Elements\Select;
 
 class SelectTest extends TestCase
 {
