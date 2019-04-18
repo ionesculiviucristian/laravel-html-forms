@@ -13,6 +13,10 @@ class TextareaTest extends TestCase
         $textarea = new class extends Textarea {
         };
 
-        $this->assertEquals('<textarea></textarea>', (string) $textarea);
+        $textarea
+            ->value('value1')
+            ->setContent('test1');
+
+        $this->assertEquals('<textarea>test1</textarea>', (string) $textarea);
     }
 }

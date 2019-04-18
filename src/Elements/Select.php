@@ -95,7 +95,15 @@ class Select extends Element
     {
         $optionsString = '';
 
-        foreach ($this->options as $value => $text) {
+        foreach ($this->options as $key => $option) {
+            if ($option instanceof Option) {
+                $value = $option->value;
+                $text = $option->getContent();
+            } else {
+                $value = $key;
+                $text = $option;
+            }
+
             $optionsString .= "<option value=\"{$value}\"";
 
             if (in_array($value, $this->selectedOptions)) {

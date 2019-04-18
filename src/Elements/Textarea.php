@@ -17,4 +17,12 @@ class Textarea extends Element
      * @var string
      */
     protected $tag = 'textarea';
+
+    /**
+     * @return bool
+     */
+    protected function transformInternalValueAttribute()
+    {
+        return false;
+    }
 }

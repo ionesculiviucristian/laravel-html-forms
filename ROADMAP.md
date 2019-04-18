@@ -10,7 +10,7 @@
 - [x] handle put/delete param in Form::method()
 
 ### 1.2.x
-- [ ] add Option element
+- [x] add Option element
 - [ ] add remaining shorthands to elements
 - [ ] integrate CSS frameworks
 
@@ -18,4 +18,5 @@
 - [ ] new elements based on popular JS libraries
 
 ### 1.4.x
+- [ ] add tables
 - [ ] add documentation

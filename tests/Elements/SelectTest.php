@@ -4,6 +4,7 @@ namespace ionesculiviucristian\LaravelHtmlForms\Tests\Elements;
 
 use Orchestra\Testbench\TestCase;
 use ionesculiviucristian\LaravelHtmlForms\Elements\Select;
+use ionesculiviucristian\LaravelHtmlForms\Elements\Option;
 
 class SelectTest extends TestCase
 {
@@ -25,6 +26,22 @@ class SelectTest extends TestCase
             ->disabled([2, 3, 4]);
 
         $this->assertEquals('<select><option value="1" selected>Test1</option><option value="2" disabled>Test2</option><option value="3" disabled>Test3</option><option value="4" selected disabled>Test4</option><option value="5" selected>Test5</option></select>', (string) $select);
+
+        $select2 = new class extends Select {
+        };
+
+        $select2
+            ->options([
+                (new Option)->value(1)->setContent('Test1'),
+                (new Option)->value(2)->setContent('Test2'),
+                (new Option)->value(3)->setContent('Test3'),
+                (new Option)->value(4)->setContent('Test4'),
+                (new Option)->value(5)->setContent('Test5'),
+            ])
+            ->selected([1, 5, 4])
+            ->disabled([2, 3, 4]);
+
+        $this->assertEquals('<select><option value="1" selected>Test1</option><option value="2" disabled>Test2</option><option value="3" disabled>Test3</option><option value="4" selected disabled>Test4</option><option value="5" selected>Test5</option></select>', (string) $select2);
     }
 
     /** @test */
