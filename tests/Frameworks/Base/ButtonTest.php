@@ -1,10 +1,10 @@
 <?php
 
-namespace ionesculiviucristian\LaravelHtmlForms\Tests\Elements;
+namespace ionesculiviucristian\LaravelHtmlForms\Tests\Frameworks\Base;
 
 use InvalidArgumentException;
 use Orchestra\Testbench\TestCase;
-use ionesculiviucristian\LaravelHtmlForms\Elements\Button;
+use ionesculiviucristian\LaravelHtmlForms\Frameworks\Base\Button;
 
 class ButtonTest extends TestCase
 {

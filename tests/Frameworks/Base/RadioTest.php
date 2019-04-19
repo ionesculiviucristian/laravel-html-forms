@@ -1,9 +1,9 @@
 <?php
 
-namespace ionesculiviucristian\LaravelHtmlForms\Tests\Elements;
+namespace ionesculiviucristian\LaravelHtmlForms\Tests\Frameworks\Base;
 
 use Orchestra\Testbench\TestCase;
-use ionesculiviucristian\LaravelHtmlForms\Elements\Radio;
+use ionesculiviucristian\LaravelHtmlForms\Frameworks\Base\Radio;
 
 class RadioTest extends TestCase
 {

@@ -8,7 +8,7 @@ use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Finder\SplFileInfo;
 
-class Provider extends ServiceProvider
+class LaravelHtmlFormsProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -17,13 +17,19 @@ class Provider extends ServiceProvider
      */
     public function register()
     {
-        $facades = $this->getFacades();
+        $configPath = __DIR__.'/../config/laravel_html_forms.php';
+
+        $this->mergeConfigFrom($configPath, 'laravel-html-forms');
+
+        $framework = config('laravel-html-forms.framework');
+
+        $facades = $this->getFacades($framework);
 
         $loader = AliasLoader::getInstance();
 
         foreach ($facades as $facade => $name) {
-            $this->app->bind($facade, function () use ($name) {
-                $class = "ionesculiviucristian\LaravelHtmlForms\Elements\\{$name}";
+            $this->app->bind($facade, function () use ($name, $framework) {
+                $class = "ionesculiviucristian\LaravelHtmlForms\Frameworks\\{$framework}\\{$name}";
 
                 return new $class;
             });
@@ -33,13 +39,14 @@ class Provider extends ServiceProvider
     }
 
     /**
+     * @param string $framework
      * @return array
      */
-    protected function getFacades()
+    protected function getFacades(string $framework): array
     {
         $facades = [];
 
-        $files = File::files(__DIR__.'/Elements');
+        $files = File::files(__DIR__."/Frameworks/{$framework}");
 
         /** @var SplFileInfo $file */
         foreach ($files as $file) {

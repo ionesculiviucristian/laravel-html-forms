@@ -1,27 +1,27 @@
 <?php
 
-namespace ionesculiviucristian\LaravelHtmlForms\Elements;
+namespace ionesculiviucristian\LaravelHtmlForms\Frameworks\Base;
 
 use ionesculiviucristian\LaravelHtmlForms\Element;
 use ionesculiviucristian\LaravelHtmlForms\Traits\HasTypeAttribute;
 use ionesculiviucristian\LaravelHtmlForms\Traits\IsClosedInputTag;
 use ionesculiviucristian\LaravelHtmlForms\Traits\InteractsWithForms;
-use ionesculiviucristian\LaravelHtmlForms\Traits\HasPlaceholderAttribute;
+use ionesculiviucristian\LaravelHtmlForms\Traits\HasCheckedAttribute;
 
-class Text extends Element
+class Radio extends Element
 {
     use IsClosedInputTag;
     use HasTypeAttribute;
     use InteractsWithForms;
-    use HasPlaceholderAttribute;
+    use HasCheckedAttribute;
 
     /**
-     * Text constructor.
+     * Radio constructor.
      */
     public function __construct()
     {
         $this->setAsClosedInputTag();
 
-        $this->attributeType = 'text';
+        $this->attributeType = 'radio';
     }
 }

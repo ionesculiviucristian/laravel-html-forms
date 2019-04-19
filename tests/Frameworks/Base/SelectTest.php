@@ -1,10 +1,10 @@
 <?php
 
-namespace ionesculiviucristian\LaravelHtmlForms\Tests\Elements;
+namespace ionesculiviucristian\LaravelHtmlForms\Tests\Frameworks\Base;
 
 use Orchestra\Testbench\TestCase;
-use ionesculiviucristian\LaravelHtmlForms\Elements\Option;
-use ionesculiviucristian\LaravelHtmlForms\Elements\Select;
+use ionesculiviucristian\LaravelHtmlForms\Frameworks\Base\Option;
+use ionesculiviucristian\LaravelHtmlForms\Frameworks\Base\Select;
 
 class SelectTest extends TestCase
 {

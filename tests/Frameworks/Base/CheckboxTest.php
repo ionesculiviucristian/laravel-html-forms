@@ -1,9 +1,9 @@
 <?php
 
-namespace ionesculiviucristian\LaravelHtmlForms\Tests\Elements;
+namespace ionesculiviucristian\LaravelHtmlForms\Tests\Frameworks\Base;
 
 use Orchestra\Testbench\TestCase;
-use ionesculiviucristian\LaravelHtmlForms\Elements\Checkbox;
+use ionesculiviucristian\LaravelHtmlForms\Frameworks\Base\Checkbox;
 
 class CheckboxTest extends TestCase
 {

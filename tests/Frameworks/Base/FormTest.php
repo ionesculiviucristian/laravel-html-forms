@@ -1,10 +1,10 @@
 <?php
 
-namespace ionesculiviucristian\LaravelHtmlForms\Tests\Elements;
+namespace ionesculiviucristian\LaravelHtmlForms\Tests\Frameworks\Base;
 
 use InvalidArgumentException;
 use Orchestra\Testbench\TestCase;
-use ionesculiviucristian\LaravelHtmlForms\Elements\Form;
+use ionesculiviucristian\LaravelHtmlForms\Frameworks\Base\Form;
 
 class FormTest extends TestCase
 {

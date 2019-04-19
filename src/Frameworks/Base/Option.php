@@ -1,6 +1,6 @@
 <?php
 
-namespace ionesculiviucristian\LaravelHtmlForms\Elements;
+namespace ionesculiviucristian\LaravelHtmlForms\Frameworks\Base;
 
 use ionesculiviucristian\LaravelHtmlForms\Element;
 use ionesculiviucristian\LaravelHtmlForms\Traits\HasValueAttribute;

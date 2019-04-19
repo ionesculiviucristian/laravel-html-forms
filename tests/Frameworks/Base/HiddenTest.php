@@ -1,9 +1,9 @@
 <?php
 
-namespace ionesculiviucristian\LaravelHtmlForms\Tests\Elements;
+namespace ionesculiviucristian\LaravelHtmlForms\Tests\Frameworks\Base;
 
 use Orchestra\Testbench\TestCase;
-use ionesculiviucristian\LaravelHtmlForms\Elements\Hidden;
+use ionesculiviucristian\LaravelHtmlForms\Frameworks\Base\Hidden;
 
 class HiddenTest extends TestCase
 {

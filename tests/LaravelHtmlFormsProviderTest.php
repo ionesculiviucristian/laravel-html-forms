@@ -2,21 +2,26 @@
 
 namespace ionesculiviucristian\LaravelHtmlForms\Tests;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Foundation\Application;
 use Symfony\Component\Finder\SplFileInfo;
 
-class ProviderTest extends TestCase
+class LaravelHtmlFormsProviderTest extends TestCase
 {
     /** @test */
     public function it_registers_the_facades_correctly(): void
     {
-        $facades = $this->getFacades();
+        $config = require (__DIR__.'/../config/laravel_html_forms.php');
+
+        $framework = Arr::get($config, 'framework');
+
+        $facades = $this->getFacades($framework);
 
         foreach ($facades as $facade => $name) {
-            $this->assertInstanceOf("ionesculiviucristian\LaravelHtmlForms\Elements\\{$name}", $name::id('test'));
+            $this->assertInstanceOf("ionesculiviucristian\LaravelHtmlForms\Frameworks\\{$framework}\\{$name}", $name::id('test'));
         }
     }
 
@@ -24,19 +29,20 @@ class ProviderTest extends TestCase
      * @param Application $app
      * @return array
      */
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
-        return ['ionesculiviucristian\LaravelHtmlForms\Provider'];
+        return ['ionesculiviucristian\LaravelHtmlForms\LaravelHtmlFormsProvider'];
     }
 
     /**
+     * @param string $framework
      * @return array
      */
-    protected function getFacades()
+    protected function getFacades(string $framework): array
     {
         $facades = [];
 
-        $files = File::files(__DIR__.'/../src/Elements');
+        $files = File::files(__DIR__."/../src/Frameworks/{$framework}");
 
         /** @var SplFileInfo $file */
         foreach ($files as $file) {

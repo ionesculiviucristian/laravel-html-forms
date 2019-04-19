@@ -1,6 +1,6 @@
 <?php
 
-namespace ionesculiviucristian\LaravelHtmlForms\Elements;
+namespace ionesculiviucristian\LaravelHtmlForms\Frameworks\Base;
 
 use Illuminate\Support\Str;
 use InvalidArgumentException;
