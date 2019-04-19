@@ -16,6 +16,7 @@
 
 ### 1.3.x 
 - [ ] add image element
+- [ ] add label element
 - [ ] new elements based on popular JS libraries
 
 ### 1.4.x
